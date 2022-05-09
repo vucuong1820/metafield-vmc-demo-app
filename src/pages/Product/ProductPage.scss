@@ -1,0 +1,65 @@
+.product-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+}
+.badges {
+    display: flex;
+    &__item {
+        width: 110px;
+        margin-left: 16px;
+        &--status {
+            width: unset
+        }
+    }
+}
+.pagination {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.input-search {
+    font-size: var(--p-font-size-5);
+    font-weight: var(--p-font-weight-regular);
+    line-height: var(--p-line-height-3);
+    text-transform: initial;
+    letter-spacing: initial;
+    position: relative;
+    z-index: var(--pc-text-field-contents);
+    display: block;
+    flex: 1 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.25rem;
+    margin: 0;
+    padding: calc(var(--p-line-height-6)/2 - var(--p-line-height-3)/2 - var(--p-space-05)/2) calc(var(--p-space-2)*1.5);
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 6px 0 0 6px;
+    font-family: var(--p-font-family-sans);
+    -webkit-appearance: none;
+    appearance: none;
+    caret-color: var(--p-text);
+    color: var(--p-text);
+
+    &:focus-visible {
+        outline: 2px solid var(--p-focused);
+        border-radius:6px;
+        z-index: 99;
+    }
+}
+
+.filter-wrapper {
+    display: flex;
+    margin-bottom: 18px;
+    .Polaris-ButtonGroup > .Polaris-ButtonGroup__Item:first-child button{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.filter-tags .Polaris-Tag {
+    margin-right:8px;
+}
