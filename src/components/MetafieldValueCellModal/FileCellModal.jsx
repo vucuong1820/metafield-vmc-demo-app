@@ -16,7 +16,7 @@ import {
 import { uploadFiles } from "../../gql/uploadFiles";
 FileCellModal.propTypes = {};
 
-function FileCellModal({ onSetValue, value }) {
+function FileCellModal({ onSetValue, value, error }) {
   const [files, setFiles] = useState([]);
   const [imgUrl, setImgUrl] = useState("")
   const [filesList, setfilesList] = useState([]);
