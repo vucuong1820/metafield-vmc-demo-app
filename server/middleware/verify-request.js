@@ -30,6 +30,13 @@ export default function verifyRequest(app, { returnHeader = true } = {}) {
           session.accessToken
         );
         await client.query({ data: TEST_GRAPHQL_QUERY });
+
+        const clientRest = new Shopify.Clients.Rest(
+          session.shop,
+          session.accessToken
+        );
+        const response = await clientRest.get({path: 'shop'});
+
         return next();
       } catch (e) {
         if (

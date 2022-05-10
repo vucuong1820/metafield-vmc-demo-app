@@ -22,6 +22,7 @@ import {
   ClockMajor,
   PageMajor,
   VariantMajor,
+  CircleDisableMinor
 } from "@shopify/polaris-icons";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,6 +30,7 @@ import BooleanCellModal from "./MetafieldValueCellModal/BooleanCellModal";
 import ColorCellModal from "./MetafieldValueCellModal/ColorCellModal";
 import DateCellModal from "./MetafieldValueCellModal/DateCellModal";
 import DateTimeCell from "./MetafieldValueCellModal/DateTimeCell";
+import DefaultCell from "./MetafieldValueCellModal/DefaultCell";
 import DimensionCellModal from "./MetafieldValueCellModal/DimensionCellModal";
 import FileCellModal from "./MetafieldValueCellModal/FileCellModal";
 import JsonCell from "./MetafieldValueCellModal/JsonCell";
@@ -68,14 +70,6 @@ function MetafieldRow(props) {
   const { namespace, key, value, type, id } = item;
   const handleValue = (newValue) => {
     onChangeMetafield(newValue, id);
-    // const newErrorsList = [...errorsList];
-    // const indexFieldChanged = errorsList.findIndex(
-    //   (x) => x.field === "value"
-    // );
-    // if (newErrorsList[indexFieldChanged]?.message) {
-    //   newErrorsList[indexFieldChanged].message = "";
-    //   setErrorsList(newErrorsList);
-    // }
     setErrorsList(prev => {
       const index = prev.findIndex(x => x.id === id)
       if(prev[index]?.message){
@@ -276,14 +270,17 @@ function MetafieldRow(props) {
           ),
         };
 
-      // case "page_reference":
-      //   return {
-      //     icon: PageMajor,
-      //     render: <PageCell onSetValue={handleValue} value={value} />,
-      //   };
+      case "page_reference":
+        return {
+          icon: PageMajor,
+          render: <PageCell onSetValue={handleValue} value={value} />,
+        };
 
       default:
-        break;
+        return {
+          icon: CircleDisableMinor,
+          render: <DefaultCell onSetValue={handleValue} value={value} />,
+        }
     }
   };
   const [disabled, setDisabled] = useState(true);

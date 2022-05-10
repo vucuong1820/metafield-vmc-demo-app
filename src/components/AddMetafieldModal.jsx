@@ -367,18 +367,18 @@ function AddMetafieldModal({
           ),
         };
 
-      // case "page_reference":
-      //   return {
-      //     icon: PageMajor,
-      //     render: (
-      //       <PageCell
-      //         productId={ownerId}
-      //         onSetValue={handleSetValue}
-      //         value={metafield.value}
-      //         error={isError.value}
-      //       />
-      //     ),
-      //   };
+      case "page_reference":
+        return {
+          icon: PageMajor,
+          render: (
+            <PageCell
+              productId={ownerId}
+              onSetValue={handleSetValue}
+              value={metafield.value}
+              error={isError.value}
+            />
+          ),
+        };
       default:
         break;
     }
@@ -407,7 +407,7 @@ function AddMetafieldModal({
     "volume",
     "variant_reference",
     "date_time",
-    // "page_reference",
+    "page_reference",
   ];
   const listTypeMarkup = listType2.map((item) => ({
     content: item,

@@ -96,3 +96,8 @@
     width: 100%;
     white-space: break-spaces;
 }
+
+.page-filter .Polaris-ButtonGroup {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}

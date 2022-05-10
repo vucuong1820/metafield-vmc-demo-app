@@ -4,9 +4,10 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
-
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
+import { Page } from "@shopify/shopify-api/dist/rest-resources/2022-04/page.js";
+import route from "./routes/index.js"
 
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
@@ -59,6 +60,62 @@ export async function createServer(
     }
   });
 
+  // app.get("/shop", async (req, res) => {
+  //   try {
+  //     const session = await Shopify.Utils.loadCurrentSession(
+  //       req,
+  //       res,
+  //     );
+  //     console.log('session:', session);
+  //     const clientRest = new Shopify.Clients.Rest(
+  //       session.shop,
+  //       session.accessToken
+  //     );
+  //     const response = await clientRest.get({path: 'shop'});
+  //     res.send(response)
+  //   } catch (error) {
+  //       console.log('error shop server:',error);
+  //   }
+  // })
+
+  //routes init
+  route(app)
+  
+
+  // app.get("/pages", async (req, res) => {
+  //   try {
+  //     const session = await Shopify.Utils.loadCurrentSession(req, res);
+  //     const client = new Shopify.Clients.Rest(
+  //       session.shop,
+  //       session.accessToken
+  //     );
+  //     // Use `client.get` to request the specified Shopify REST API endpoint, in this case `products`.
+  //     const products = await client.get({
+  //       path: "pages",
+  //     });
+  //     res.send(products);
+  //   } catch (error) {
+  //     console.log("error shop server:", error);
+  //   }
+  // });
+
+  // app.get("/shop", async (req, res) => {
+  //  try {
+
+  //   const session = await Shopify.Utils.loadCurrentSession(
+  //     req,
+  //     res,
+  //   );
+  //   const response = await fetch(
+  //     `https://${Shopify.Context.API_KEY}:${session.accessToken}@${session.shop}/admin/api/2020-10/shop.json`
+  //   );
+  //   res.status(200).send(response.json)
+
+  //  } catch (error) {
+  //    res.status(500).send(error.message)
+  //  }
+  // });
+
   app.get("/products-count", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(req, res, true);
     const { Product } = await import(
@@ -80,7 +137,6 @@ export async function createServer(
 
   app.use(express.json());
 
-  
   app.use((req, res, next) => {
     const shop = req.query.shop;
     if (Shopify.Context.IS_EMBEDDED_APP && shop) {
@@ -154,4 +210,3 @@ export async function createServer(
 if (!isTest) {
   createServer().then(({ app }) => app.listen(PORT));
 }
-

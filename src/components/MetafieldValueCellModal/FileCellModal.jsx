@@ -46,6 +46,7 @@ function FileCellModal({ onSetValue, value, error }) {
   useEffect(() => {
     if (!loading && !!data) {
       // setSkip(true);
+      console.log(data)
       setfilesList(
         data.files.edges.map((item) => ({
           id: item.node.id,
