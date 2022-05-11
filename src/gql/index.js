@@ -212,6 +212,7 @@ export const UPLOAD_FILES = gql`
 mutation fileCreate($files: [FileCreateInput!]!) {
   fileCreate(files: $files) {
     files {
+      createdAt
       fileStatus
       preview {
         image {
@@ -222,7 +223,7 @@ mutation fileCreate($files: [FileCreateInput!]!) {
       ... on MediaImage {
         id 
         image {
-          transformedSrc
+          url
         }
       }
     }
