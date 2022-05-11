@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import axios from "axios";
 import { STAGED_UPLOADS_CREATE, UPLOAD_FILES } from ".";
-
+import { delay } from "../util"
 export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded,queryFileByTime) => {
 
   const {name, type, size} = files[0]
@@ -48,13 +48,7 @@ export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded
   console.log('dataUploaded:', dataUploaded)
 
   const fileId = dataUploaded.data.fileCreate.files[0].id
-  const time = dataUploaded.data.fileCreate.files[0].createdAt
-  const fileTimeUpload = await queryFileByTime({
-    variables: {
-      query: `created_at:${time}`
-    }
-  })
-  console.log('file time upload:',fileTimeUpload)
+  await delay(3000)
   const fileUpload = await queryFileUploaded({
       variables: {
           id: fileId
