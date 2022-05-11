@@ -19,9 +19,6 @@ function ProductCellModal({ onSetValue, value, error }) {
     }
   }, [data, loading]);
   const [openProductPicker, setOpenProductPicker] = useState(false);
-  const handleOpen = () => {
-    setOpenProductPicker(true);
-  };
   return (
     <>
       <Button
@@ -33,7 +30,7 @@ function ProductCellModal({ onSetValue, value, error }) {
           />
         }
         disclosure="select"
-        onClick={handleOpen}
+        onClick={() => setOpenProductPicker(true)}
       >
         {product?.selection?.[0]?.title || "Choose a product"}
       </Button>

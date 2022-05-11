@@ -20,16 +20,13 @@ function VariantCell({ onSetValue, value, error }) {
     }
   }, [data, loading]);
   const [openVariantPicker, setOpenVariantPicker] = useState(false);
-  const handleOpen = () => {
-    setOpenVariantPicker(true);
-  };
   return (
     <>
       <Button
         fullWidth
         icon={<Avatar customer source={variant?.image || ""} />}
         disclosure="select"
-        onClick={handleOpen}
+        onClick={() => setOpenVariantPicker(true)}
       >
         {variant?.displayName || "Choose your variant"}
       </Button>
