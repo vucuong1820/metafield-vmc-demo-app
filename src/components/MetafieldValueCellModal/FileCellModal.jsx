@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   GET_FILES,
   GET_FILE_BY_ID,
+  QUERY_FILE_TIME,
   STAGED_UPLOADS_CREATE,
   UPLOAD_FILES
 } from "../../gql";
@@ -32,6 +33,7 @@ function FileCellModal({ onSetValue, value, error }) {
   const [generateUrl] = useMutation(STAGED_UPLOADS_CREATE);
   const [uploadFile] = useMutation(UPLOAD_FILES);
   const [queryFileById] = useLazyQuery(GET_FILE_BY_ID);
+  const [queryFileByTime] = useLazyQuery(QUERY_FILE_TIME)
 
   useEffect(() => {
     (async () => {
@@ -68,7 +70,8 @@ function FileCellModal({ onSetValue, value, error }) {
         acceptedFiles,
         generateUrl,
         uploadFile,
-        queryFileById
+        queryFileById,
+        queryFileByTime
       );
       setfilesList((prev) => {
         prev.unshift({ id: fileUploadedId, url: fileUploadedUrl });
