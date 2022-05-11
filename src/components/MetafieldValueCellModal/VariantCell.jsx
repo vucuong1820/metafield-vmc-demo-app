@@ -19,9 +19,9 @@ function VariantCell({ onSetValue, value, error }) {
       setVariant(data.productVariant);
     }
   }, [data, loading]);
-  const [openPicker, setOpenPicker] = useState(false);
+  const [openVariantPicker, setOpenVariantPicker] = useState(false);
   const handleOpen = () => {
-    setOpenPicker(true);
+    setOpenVariantPicker(true);
   };
   return (
     <>
@@ -37,19 +37,14 @@ function VariantCell({ onSetValue, value, error }) {
         resourceType="ProductVariant"
         allowMultiple={false}
         showVariants={false}
-        open={openPicker}
+        open={openVariantPicker}
         onSelection={(resources) => {
-          // setProduct(resources);
-          //   setOpenPicker(false);
           console.log(resources);
           setVariant(resources.selection[0]);
           onSetValue(resources.selection[0].id);
-          setOpenPicker(false);
-          // onSetValue(resources);
-          //   setSourceAvatar(resources.selection[0].images[0].originalSrc)
-          //   onSetValue(resources.selection[0].id)
+          setOpenVariantPicker(false);
         }}
-        onCancel={() => setOpenPicker(false)}
+        onCancel={() => setOpenVariantPicker(false)}
       />
       <InlineError message={error || ""} />
     </>

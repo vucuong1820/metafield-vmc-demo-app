@@ -88,7 +88,7 @@ function ProductMetafield(props) {
       console.log("Delete successfully");
       setToast({active: true, content: "Delete metafield sucessfully!", error: false})
     } catch (error) {
-      setToast({active: true, content: "Failed to delete metafield. Please try again!", error: true })
+      setToast({active: true, content: "Failed to delete metafield. Please try again later or reload this page!", error: true })
       console.log("Failed to delete:", error);
     }
   };
@@ -125,7 +125,7 @@ function ProductMetafield(props) {
       setErrorsList([])
       return "success";
     } catch (error) {
-      setToast({active: true, content:'Failed to add new metafield. Please try again!', error: true })
+      setToast({active: true, content:'Failed to add new metafield. Please try again later or reload this page!', error: true })
       console.log("failed to add new metafield:", error);
       return "failed";
     }
@@ -183,7 +183,7 @@ function ProductMetafield(props) {
       // setErrorsList([]);
       return;
     } catch (error) {
-      setToast({active: true, content: "Failed to save metafield. Please try again!", error: true})
+      setToast({active: true, content: "Failed to save metafield. Please try again later or reload this page!", error: true})
       console.log("Failed to update:", error);
       return;
     }

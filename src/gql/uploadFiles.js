@@ -48,6 +48,8 @@ export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded
   console.log('dataUploaded:', dataUploaded)
 
   const fileId = dataUploaded.data.fileCreate.files[0].id
+
+  // wait 1.5s for processing uploading file (otherwise, cdn img is null)
   await delay(1500)
   const fileUpload = await queryFileUploaded({
       variables: {

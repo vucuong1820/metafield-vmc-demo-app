@@ -273,13 +273,13 @@ function MetafieldRow(props) {
       case "page_reference":
         return {
           icon: PageMajor,
-          render: <PageCell onSetValue={handleValue} value={value} />,
+          render: <PageCell onSetValue={handleValue} value={value} error={error?.message || false} />,
         };
 
       default:
         return {
           icon: CircleDisableMinor,
-          render: <DefaultCell onSetValue={handleValue} value={value} />,
+          render: <DefaultCell onSetValue={handleValue} value={value} error={error?.message || false} />,
         }
     }
   };

@@ -18,9 +18,9 @@ function ProductCellModal({ onSetValue, value, error }) {
       setProduct(data);
     }
   }, [data, loading]);
-  const [openPicker, setOpenPicker] = useState(false);
+  const [openProductPicker, setOpenProductPicker] = useState(false);
   const handleOpen = () => {
-    setOpenPicker(true);
+    setOpenProductPicker(true);
   };
   return (
     <>
@@ -41,15 +41,15 @@ function ProductCellModal({ onSetValue, value, error }) {
         resourceType="Product"
         allowMultiple={false}
         showVariants={false}
-        open={openPicker}
+        open={openProductPicker}
         onSelection={(resources) => {
           // setProduct(resources);
-          setOpenPicker(false);
+          setOpenProductPicker(false);
           // onSetValue(resources);
           setSourceAvatar(resources.selection[0].images[0].originalSrc);
           onSetValue(resources.selection[0].id);
         }}
-        onCancel={() => setOpenPicker(false)}
+        onCancel={() => setOpenProductPicker(false)}
       />
       <InlineError message={error || ""} />
     </>

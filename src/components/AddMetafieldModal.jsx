@@ -27,12 +27,14 @@ import {
   VariantMajor,
   ClockMajor,
   PageMajor,
+  CircleDisableMinor
 } from "@shopify/polaris-icons";
 import React, { useCallback, useEffect, useState } from "react";
 import BooleanCellModal from "./MetafieldValueCellModal/BooleanCellModal";
 import ColorCellModal from "./MetafieldValueCellModal/ColorCellModal";
 import DateCellModal from "./MetafieldValueCellModal/DateCellModal";
 import DateTimeCell from "./MetafieldValueCellModal/DateTimeCell";
+import DefaultCell from "./MetafieldValueCellModal/DefaultCell";
 import DimensionCellModal from "./MetafieldValueCellModal/DimensionCellModal";
 import FileCellModal from "./MetafieldValueCellModal/FileCellModal";
 import JsonCell from "./MetafieldValueCellModal/JsonCell";
@@ -375,12 +377,28 @@ function AddMetafieldModal({
               productId={ownerId}
               onSetValue={handleSetValue}
               value={metafield.value}
-              error={isError.value}
+              error={
+                errorsList?.find((item) => item.field === "value")?.message ||
+                false
+              }
             />
           ),
         };
       default:
-        break;
+        return {
+          icon: CircleDisableMinor,
+          render: (
+            <DefaultCell
+              productId={ownerId}
+              onSetValue={handleSetValue}
+              value={metafield.value}
+              error={
+                errorsList?.find((item) => item.field === "value")?.message ||
+                false
+              }
+            />
+          ),
+        };
     }
   };
   const toggleActive = useCallback(() => setActive((active) => !active), []);
