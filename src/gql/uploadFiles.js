@@ -48,7 +48,7 @@ export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded
   console.log('dataUploaded:', dataUploaded)
 
   const fileId = dataUploaded.data.fileCreate.files[0].id
-  await delay(3000)
+  await delay(1500)
   const fileUpload = await queryFileUploaded({
       variables: {
           id: fileId
