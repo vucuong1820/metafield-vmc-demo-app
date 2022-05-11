@@ -79,7 +79,9 @@ function ShopMetafield(props) {
         return;
       }
       setMetafieldsList(newMetafieldsList);
+      currentMetafieldList.current = newMetafieldsList;
       console.log("Delete successfully");
+      setToast({active: true, content: "Delete metafield sucessfully!", error: false})
     } catch (error) {
       setToast({active: true, content:'Failed to delete metafield. Please try again!', error: true })
       console.log("Failed to delete:", error);
@@ -88,10 +90,21 @@ function ShopMetafield(props) {
   const handleSaveMetafield = async (item) => {
     try {
       console.log("start to save");
-      console.log(item)
-      const cloneItem = { ...item };
-      delete cloneItem.__typename;
-      delete cloneItem.id;
+
+      let cloneItem = {}
+      if (item.type === "date_time") {
+        cloneItem = {
+          ...item,
+          value: `${item.value}:00+00:00`
+        }
+        delete cloneItem.__typename;
+        delete cloneItem.id;
+      }else {
+        cloneItem = { ...item };
+        delete cloneItem.__typename;
+        delete cloneItem.id;
+      }
+
       console.log("data send:", {
         ...cloneItem,
         ownerId: shopInfo.id,
@@ -247,7 +260,7 @@ function ShopMetafield(props) {
         <Toast
           error={toast.error}
           content={toast.content}
-          duration="4000"
+          duration="3000"
           onDismiss={() => setToast({active: false, content:'', error: false})}
         />
       ) : null}

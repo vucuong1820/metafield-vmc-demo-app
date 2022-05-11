@@ -36,7 +36,6 @@ function ProductMetafield(props) {
     error: false,
   })
 
-
   const currentMetafieldList = useRef();
   const productId = `gid://shopify/Product/${props.match.params.id}`;
 
@@ -85,7 +84,9 @@ function ProductMetafield(props) {
         return
       }
       setMetafieldsList(newMetafieldsList);
+      currentMetafieldList.current = newMetafieldsList;
       console.log("Delete successfully");
+      setToast({active: true, content: "Delete metafield sucessfully!", error: false})
     } catch (error) {
       setToast({active: true, content: "Failed to delete metafield. Please try again!", error: true })
       console.log("Failed to delete:", error);
@@ -133,8 +134,18 @@ function ProductMetafield(props) {
   const handleSaveMetafield = async (item) => {
     try {
       console.log("start to save");
-      const cloneItem = { ...item };
-      delete cloneItem.__typename;
+      let cloneItem = {}
+      if (item.type === "date_time") {
+        cloneItem = {
+          ...item,
+          value: `${item.value}:00+00:00`
+        }
+        delete cloneItem.__typename;
+       
+      }else {
+        cloneItem = { ...item };
+        delete cloneItem.__typename;
+      }
       console.log("data send:", cloneItem);
       const data = await updateMetafield({
         variables: {

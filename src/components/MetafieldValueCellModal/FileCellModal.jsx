@@ -24,6 +24,9 @@ function FileCellModal({ onSetValue, value, error }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [checked, setChecked] = useState("");
+  const [isBtnLoading, setIsBtnLoading] = useState(() => {
+    return !!value
+  })
 
   const { data, loading } = useQuery(GET_FILES, { skip });
   const [generateUrl] = useMutation(STAGED_UPLOADS_CREATE);
@@ -40,6 +43,7 @@ function FileCellModal({ onSetValue, value, error }) {
         });
         if (!fileInfo.loading) setImgUrl(fileInfo.data.node.image?.url);
       }
+      setIsBtnLoading(false)
     })()
   },[value])
 
@@ -78,6 +82,7 @@ function FileCellModal({ onSetValue, value, error }) {
   const fileUpload = !files.length && <DropZone.FileUpload />;
   const activator = (
     <Button
+      loading={isBtnLoading}
       fullWidth
       icon={imgUrl ? <Avatar customer source={imgUrl || ""} /> : CircleUpMajor}
       onClick={() => setOpen(true)}
@@ -93,6 +98,7 @@ function FileCellModal({ onSetValue, value, error }) {
         primaryAction={{
           content: "Select",
           onAction: () => {
+            setIsBtnLoading(true);
             onSetValue(checked);
             setOpen(false);
           },

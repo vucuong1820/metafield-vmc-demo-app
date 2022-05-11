@@ -27,7 +27,7 @@ export const GET_PAGES = gql `
 export const GET_METAFIELD = gql`
 query ProductMetafields($productId: ID!) {
   product(id: $productId) {
-    metafields(first: 15) {
+    metafields(first: 30) {
       edges {
         node {
           id
