@@ -254,7 +254,7 @@ export const UPLOAD_FILES = gql`
 `;
 export const QUERY_FILE_TIME = gql`
   query queryFileByTime($query: String) {
-    files(query: $query) {
+    files(query: $query, first: 10) {
       edges {
         node {
           createdAt
