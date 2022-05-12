@@ -18,18 +18,18 @@ import { uploadFiles } from "../../gql/uploadFiles";
 FileCellModal.propTypes = {};
 
 function FileCellModal({ onSetValue, value, error }) {
-  const [files, setFiles] = useState([]);
   const [imgUrl, setImgUrl] = useState("")
   const [filesList, setfilesList] = useState([]);
-  const [skip, setSkip] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [checked, setChecked] = useState("");
+  const [imgError, setImgError] = useState(false)
   const [isBtnLoading, setIsBtnLoading] = useState(() => {
     return !!value
   })
+  console.log(value)
 
-  const { data, loading } = useQuery(GET_FILES, { skip });
+  const { data, loading } = useQuery(GET_FILES);
   const [generateUrl] = useMutation(STAGED_UPLOADS_CREATE);
   const [uploadFile] = useMutation(UPLOAD_FILES);
   const [queryFileById] = useLazyQuery(GET_FILE_BY_ID);
@@ -38,12 +38,19 @@ function FileCellModal({ onSetValue, value, error }) {
   useEffect(() => {
     (async () => {
       if (value) {
+
         const fileInfo = await queryFileById({
           variables: {
             id: value,
           },
         });
-        if (!fileInfo.loading) setImgUrl(fileInfo.data.node.image?.url);
+        if (!fileInfo.loading && !fileInfo.data.node?.image?.url){
+          setImgError(true)
+        }else {
+          setImgError(false)
+          setImgUrl(fileInfo.data.node?.image?.url)
+        }
+
       }
       setIsBtnLoading(false)
     })()
@@ -82,8 +89,9 @@ function FileCellModal({ onSetValue, value, error }) {
     []
   );
 
-  const fileUpload = !files.length && <DropZone.FileUpload />;
+  const fileUpload = <DropZone.FileUpload />;
   const activator = (
+    <>
     <Button
       loading={isBtnLoading}
       fullWidth
@@ -93,6 +101,10 @@ function FileCellModal({ onSetValue, value, error }) {
     >
       Select files
     </Button>
+    {
+      imgError && (<InlineError message="File not found"/>)
+    }
+    </>
   );
   return (
     <>
