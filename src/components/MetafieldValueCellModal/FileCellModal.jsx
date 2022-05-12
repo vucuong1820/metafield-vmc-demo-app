@@ -27,7 +27,6 @@ function FileCellModal({ onSetValue, value, error }) {
   const [isBtnLoading, setIsBtnLoading] = useState(() => {
     return !!value
   })
-  console.log(value)
 
   const { data, loading } = useQuery(GET_FILES);
   const [generateUrl] = useMutation(STAGED_UPLOADS_CREATE);
