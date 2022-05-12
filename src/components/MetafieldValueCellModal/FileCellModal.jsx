@@ -113,7 +113,7 @@ function FileCellModal({ onSetValue, value, error }) {
         loading={isLoading}
       >
         <Modal.Section>
-          <DropZone onDrop={handleDropZoneDrop}>{fileUpload}</DropZone>
+          <DropZone accept="image/*" onDrop={handleDropZoneDrop}>{fileUpload}</DropZone>
         </Modal.Section>
         <div className="files-section-wrapper">
           <Modal.Section className="file-section-modal">
