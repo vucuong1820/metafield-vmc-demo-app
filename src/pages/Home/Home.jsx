@@ -2,9 +2,7 @@ import { ResourcePicker } from '@shopify/app-bridge-react';
 import { EmptyState, Layout, Page } from '@shopify/polaris';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
-const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
-
+import img from "../../assets/img/emptypage.svg";
 function Home(props) {
   const history = useHistory()
   const [open, setOpen] = useState(false);
