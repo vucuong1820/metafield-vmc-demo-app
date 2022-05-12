@@ -25,7 +25,7 @@ import {
 
 function ShopMetafield(props) {
   const history = useHistory();
-  const [skip, setSkip] = useState(false);
+  const [refreshLoading, setRefreshLoading] = useState(false)
   const [metafieldsList, setMetafieldsList] = useState([]);
   const [shopInfo, setShopInfo] = useState({});
   const [openModal, setOpenModal] = useState(false);
@@ -249,10 +249,13 @@ function ShopMetafield(props) {
       }
       secondaryActions={[
         {
+          loading: refreshLoading,
           content: "Refresh",
           accessibilityLabel: "Refresh list",
           onAction: async () => {
+            setRefreshLoading(true)
             await refetch();
+            setRefreshLoading(false)
             setToast({active: true, content: "Refreshed!", error: false})
           },
           icon: () => <Icon source={RefreshMajor} color="base" />,
