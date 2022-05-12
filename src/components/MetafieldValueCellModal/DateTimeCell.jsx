@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { TextField } from "@shopify/polaris";
+import React from "react";
 
 function DateTimeCell({ onSetValue, value, error }) {
   const handleValueDateTime = () => {

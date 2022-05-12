@@ -27,7 +27,7 @@ export const GET_PAGES = gql`
 export const GET_METAFIELD = gql`
   query ProductMetafields($productId: ID!) {
     product(id: $productId) {
-      metafields(first: 30) {
+      metafields(first: 30, reverse: true) {
         edges {
           node {
             id
@@ -295,7 +295,7 @@ export const GET_SHOP_INFO = gql`
       name
       id
       url
-      metafields(first: 50) {
+      metafields(first: 50, reverse:true) {
         edges {
           node {
             namespace

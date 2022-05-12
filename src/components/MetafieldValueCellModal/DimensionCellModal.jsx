@@ -58,8 +58,8 @@ function DimensionCellModal({ onSetValue, value, error }) {
   }));
   return (
     <>
-      <ButtonGroup fullWidth>
-        <div style={{ maxWidth: "120px" }}>
+      <ButtonGroup fullWidth segmented>
+        <div>
           <TextField
             error={error ? true : false}
             step={0.1}

@@ -1,55 +1,53 @@
-import React, { useEffect, useState } from "react";
 import { ButtonGroup, InlineError, TextField } from "@shopify/polaris";
+import React from "react";
 
 
 function RatingCellModal({ onSetValue, value, error }) {
   const currentRating = value ? JSON.parse(value) : {scale_min: "", scale_max: "", value: "" };
-  // const [rating, setRating] = useState("3");
-  // const [min, setMin] = useState("1");
-  // const [max, setMax] = useState("5");
-  const [isError, setIsError] = useState(false);
   const handleRatingInput = (key,value) => {
     onSetValue(JSON.stringify({
       ...currentRating,
       [key]: value
     }))
   }
+  
   return (
     <>
-    <ButtonGroup>
-      <div style={{ maxWidth: "120px" }}>
+    <ButtonGroup segmented fullWidth>
+      <div>
         <TextField
           error={error ?  true : false}
           prefix="Rating"
           type="number"
-          // error={!isError && "Out of range"}
+          step="1"
           min={currentRating.scale_min}
           max={currentRating.scale_max}
-          value={currentRating.value}
+          value={Number.parseInt(currentRating.value).toString()}
           onChange={(value) => {
-            // setRating(value);
             handleRatingInput("value",value);
           }}
         />
       </div>
-      <div style={{ maxWidth: "91px" }}>
+      <div style={{width: '100px'}}>
         <TextField
+          type="number"
+          step="1"
           error={error ?  true : false}
           prefix="Min"
-          value={currentRating.scale_min}
+          value={Number.parseInt(currentRating.scale_min).toString()}
           onChange={(value) => {
-            // setMin(value);
             handleRatingInput("scale_min",value);
           }}
         />
       </div>
-      <div style={{ maxWidth: "91px" }}>
+      <div style={{width: '100px'}}>
         <TextField
+          type="number"
+          step="1"
           error={error ?  true : false}
           prefix="Max"
-          value={currentRating.scale_max}
+          value={Number.parseInt(currentRating.scale_max).toString()}
           onChange={(value) => {
-            // setMax(value);
             handleRatingInput("scale_max",value)
           }}
         />

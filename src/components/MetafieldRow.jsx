@@ -22,7 +22,7 @@ import {
   ClockMajor,
   PageMajor,
   VariantMajor,
-  CircleDisableMinor
+  CircleDisableMinor,
 } from "@shopify/polaris-icons";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
@@ -49,34 +49,31 @@ import WeightCell from "./MetafieldValueCellModal/WeightCell";
 MetafieldRow.propTypes = {
   index: PropTypes.number.isRequired,
   item: PropTypes.object,
-  // onChangeMetafields: PropTypes.func,
 };
 
-function MetafieldRow(props) {
+function MetafieldRow({
+  item = {},
+  onChangeMetafield,
+  onDeleteMetafield,
+  currentItem,
+  onSaveMetafield,
+  error,
+  setErrorsList,
+}) {
   const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-
-  const {
-    item = {},
-    onChangeMetafield,
-    onDeleteMetafield,
-    currentItem,
-    onSaveMetafield,
-    error,
-    setErrorsList
-  } = props;
   const deleteBtnRef = useRef(null);
   const { namespace, key, value, type, id } = item;
   const handleValue = (newValue) => {
     onChangeMetafield(newValue, id);
-    setErrorsList(prev => {
-      const index = prev.findIndex(x => x.id === id)
-      if(prev[index]?.message){
-        prev[index].message = '';
+    setErrorsList((prev) => {
+      const index = prev.findIndex((x) => x.id === id);
+      if (prev[index]?.message) {
+        prev[index].message = "";
       }
-      return prev
-    })
+      return prev;
+    });
   };
   const switchTypeValue = (type) => {
     switch (type) {
@@ -273,14 +270,27 @@ function MetafieldRow(props) {
       case "page_reference":
         return {
           icon: PageMajor,
-          render: <PageCell onSetValue={handleValue} value={value} error={error?.message || false} />,
+          render: (
+            <PageCell
+              key={key}
+              onSetValue={handleValue}
+              value={value}
+              error={error?.message || false}
+            />
+          ),
         };
 
       default:
         return {
           icon: CircleDisableMinor,
-          render: <DefaultCell onSetValue={handleValue} value={value} error={error?.message || false} />,
-        }
+          render: (
+            <DefaultCell
+              onSetValue={handleValue}
+              value={value}
+              error={error?.message || false}
+            />
+          ),
+        };
     }
   };
   const [disabled, setDisabled] = useState(true);
@@ -300,6 +310,10 @@ function MetafieldRow(props) {
 
   return (
     <IndexTable.Row>
+      <IndexTable.Cell>
+        <Button disabled icon={switchTypeValue(type).icon} />
+      </IndexTable.Cell>
+
       <IndexTable.Cell>
         <TextField disabled min="1" value={namespace} />
       </IndexTable.Cell>

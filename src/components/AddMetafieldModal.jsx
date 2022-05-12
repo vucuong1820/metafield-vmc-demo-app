@@ -63,13 +63,7 @@ function AddMetafieldModal({
   const [active, setActive] = useState(true);
   const [type, setType] = useState("single_line_text_field");
   const [isAddLoading, setIsAddLoading] = useState(false);
-  const [value, setValue] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const [isError, setIsError] = useState({
-    key: false,
-    namespace: false,
-    value: false,
-  });
   const [metafield, setMetafield] = useState({
     namespace: "",
     key: "",
@@ -430,16 +424,16 @@ function AddMetafieldModal({
   const listTypeMarkup = listType2.map((item) => ({
     content: item,
     icon: switchTypeValue(item).icon,
-    onAction() {
+    onAction: () => {
       setActive(false);
       setType(item);
       setMetafield({ namespace: "", key: "", value: "" });
+      setErrorsList([])
     },
   }));
 
   const handleAddClick = async () => {
     setIsAddLoading(true);
-    setIsError({ key: false, namespace: false, value: false });
     if (type === "date_time") {
       const result = await onAddMetafield({
         ...metafield,
@@ -460,14 +454,12 @@ function AddMetafieldModal({
         ownerId: ownerId,
       });
       setIsAddLoading(false);
-      // setOpenModal(false);
       if (result === "success") {
         setMetafield({ namespace: "", key: "", value: "" });
         setOpenModal(false);
       }
     }
 
-    // console.log(metafield, type, productId);
   };
   return (
     <Modal
@@ -477,7 +469,6 @@ function AddMetafieldModal({
       onClose={() => {
         setOpenModal(false);
         setMetafield({ namespace: "", key: "", value: "" });
-        setIsError({ key: false, namespace: false, value: false });
       }}
     >
       <Card.Section>
@@ -568,10 +559,7 @@ function AddMetafieldModal({
             </IndexTable.Cell>
 
             <IndexTable.Cell>
-              {/* <MetafieldValueCellModal
-                type={type}
-                onSetValue={handleSetValue}
-              /> */}
+              
               {switchTypeValue(type).render}
             </IndexTable.Cell>
 

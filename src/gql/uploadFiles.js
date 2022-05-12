@@ -44,8 +44,6 @@ export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded
       }
     }
   })
-  console.log('resoure url:', resourceUrl)
-  console.log('dataUploaded:', dataUploaded)
 
   const fileId = dataUploaded.data.fileCreate.files[0].id
 
@@ -56,7 +54,6 @@ export const uploadFiles = async (files,generateUrl,uploadFile,queryFileUploaded
           id: fileId
       }
   })
-  console.log('file upload:',fileUpload)
   if(!fileUpload.loading) {
     return {
         fileUploadedId:  fileUpload.data.node.id,

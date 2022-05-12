@@ -1,8 +1,9 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { Loading } from "@shopify/app-bridge-react";
 import { useHistory } from 'react-router-dom';
 import { Modal } from "@shopify/app-bridge/actions";
 import {
+  Banner,
   Button,
   Card,
   Icon,
@@ -10,9 +11,10 @@ import {
   Page,
   Tabs,
   Toast,
+  
 } from "@shopify/polaris";
-import { ViewMajor } from "@shopify/polaris-icons";
-import React, { useEffect, useRef, useState } from "react";
+import { ViewMajor, RefreshMajor } from "@shopify/polaris-icons";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AddMetafieldModal from "../../components/AddMetafieldModal";
 import MetafieldRow from "../../components/MetafieldRow";
 import {
@@ -25,11 +27,10 @@ import {
 
 function ProductMetafield(props) {
   const history = useHistory()
-  const [skipProduct, setSkipProduct] = useState(false);
-  const [skipMeta, setSkipMeta] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [metafieldsList, setMetafieldsList] = useState([]);
   const [errorsList, setErrorsList] = useState([]);
+  const [refreshLoading, setRefreshLoading] = useState(false)
   const [toast, setToast] = useState({
     active: false,
     content: '',
@@ -42,21 +43,28 @@ function ProductMetafield(props) {
   const [createMetafield, {}] = useMutation(CREATE_METAFIELD);
   const [updateMetafield, {}] = useMutation(UPDATE_METAFIELD);
   const [deleteMetafield, {}] = useMutation(DELETE_METAFIELD);
-  const productInfo = useQuery(GET_PRODUCT_BY_ID, {
-    variables: { productId },
-    skipProduct,
-  });
+  const [getProductInfo] = useLazyQuery(GET_PRODUCT_BY_ID);
+  const [productInfo, setProductInfo] = useState({})
   const metafields = useQuery(GET_METAFIELD, {
-    variables: { productId },
-    skipMeta,
+    variables: { productId }
   });
+  
+  useEffect(() => {
+    (async () => {
+      const productData = await getProductInfo({
+        variables: { productId }
+      })     
+      if(!productData.loading) {
+        setProductInfo(productData)
+      }
+
+    })()
+  }, [])
+
 
   useEffect(() => {
-    if (!productInfo.loading && !!productInfo.data) {
-      setSkipProduct(true);
-    }
+   
     if (!metafields.loading && !!metafields.data) {
-      setSkipMeta(true);
       const metafieldsListData =
         metafields.data &&
         metafields.data?.product.metafields.edges.map((item) => item.node);
@@ -64,14 +72,11 @@ function ProductMetafield(props) {
       setMetafieldsList(metafieldsListData);
     }
   }, [
-    productInfo.loading,
-    productInfo.data,
     metafields.loading,
     metafields.data,
   ]);
-  const handleDeleteMetafield = async (id) => {
+  const handleDeleteMetafield = useCallback(async (id) => {
     try {
-      const newMetafieldsList = metafieldsList.filter((x) => x.id !== id);
       const data = await deleteMetafield({
         variables: {
           input: {
@@ -83,15 +88,15 @@ function ProductMetafield(props) {
         setToast({active: true, content:data.data.metafieldDelete.userErrors[0].message, error: true })
         return
       }
-      setMetafieldsList(newMetafieldsList);
-      currentMetafieldList.current = newMetafieldsList;
+      await metafields.refetch();
       console.log("Delete successfully");
       setToast({active: true, content: "Delete metafield sucessfully!", error: false})
     } catch (error) {
       setToast({active: true, content: "Failed to delete metafield. Please try again later or reload this page!", error: true })
       console.log("Failed to delete:", error);
     }
-  };
+  }, []);
+
   const handleChangeMetafield = (newValue, id) => {
     const metafieldChanged = metafieldsList.find((x) => x.id === id);
     const indexOfMetafieldChanged = metafieldsList.findIndex(
@@ -103,7 +108,7 @@ function ProductMetafield(props) {
     setMetafieldsList(newMetafieldsList);
   };
 
-  const handleAddMetafield = async (dataObj) => {
+  const handleAddMetafield = useCallback(async (dataObj) => {
     try {
       console.log("add metafield, data send:", dataObj);
       const data = await createMetafield({
@@ -119,7 +124,7 @@ function ProductMetafield(props) {
         setToast({active: true, content:data.data.metafieldsSet.userErrors[0].message, error: true })
         return "failed";
       }
-
+      // setSkipMeta(false)     
       await metafields.refetch();
       setToast({active: true, content:'Add new metafield successfully', error: false })
       setErrorsList([])
@@ -129,9 +134,9 @@ function ProductMetafield(props) {
       console.log("failed to add new metafield:", error);
       return "failed";
     }
-  };
+}, []);
 
-  const handleSaveMetafield = async (item) => {
+  const handleSaveMetafield = useCallback(async (item) => {
     try {
       console.log("start to save");
       let cloneItem = {}
@@ -180,14 +185,13 @@ function ProductMetafield(props) {
       })
       setErrorsList([])
       setToast({active: true, content: "Metafield saved!", error: false})
-      // setErrorsList([]);
       return;
     } catch (error) {
       setToast({active: true, content: "Failed to save metafield. Please try again later or reload this page!", error: true})
       console.log("Failed to update:", error);
       return;
     }
-  };
+  }, [])
 
   if (productInfo.loading || metafields.loading) return <Loading />;
   return (
@@ -200,15 +204,21 @@ function ProductMetafield(props) {
           setOpenModal(!openModal);
           setErrorsList([])
         }} >
-          Create meta fields
+          Create metafields
         </Button>
       }
       secondaryActions={[
         {
-          content: "Preview",
-          accessibilityLabel: "Preview product",
-          onAction: () => alert("Preview product"),
-          icon: () => <Icon source={ViewMajor} color="base" />,
+          loading: refreshLoading,
+          content: "Refresh",
+          accessibilityLabel: "Refresh list",
+          onAction: async () => {
+            setRefreshLoading(true)
+            await metafields.refetch();
+            setRefreshLoading(false)
+            setToast({active: true, content: "Refreshed!", error: false})
+          },
+          icon: () => <Icon source={RefreshMajor} color="base" />,
         },
       ]}
     >
@@ -234,36 +244,53 @@ function ProductMetafield(props) {
           onSelect={() => console.log("123")}
         >
           <Card.Section>
-            <IndexTable
-              resourceName={{ singular: "metafield", plural: "metafields" }}
-              itemCount={3}
-              headings={[
-                { title: "Namespace" },
-                { title: "Key" },
-                { title: "Value" },
-                { title: "Actions" },
-              ]}
-              selectable={false}
-            >
-              {metafields &&
-                metafieldsList.map((metafield, index) => {
+          {metafieldsList.length > 0 ? (
+              <IndexTable
+                resourceName={{ singular: "metafield", plural: "metafields" }}
+                itemCount={3}
+                headings={[
+                  { title: "Type" },
+                  { title: "Namespace" },
+                  { title: "Key" },
+                  { title: "Value" },
+                  { title: "Actions" },
+                ]}
+                selectable={false}
+              >
+                {metafieldsList.map((metafield, index) => {
                   return (
                     <MetafieldRow
-                      error={errorsList.find(x => x.id === metafield.id)}
-                      setErrorsList={setErrorsList}
-                      key={index}
-                      index={index}
-                      currentItem={currentMetafieldList.current.find(
-                        (x) => x.id === metafield.id
-                      )}
-                      item={metafield}
-                      onDeleteMetafield={handleDeleteMetafield}
-                      onChangeMetafield={handleChangeMetafield}
-                      onSaveMetafield={handleSaveMetafield}
+                    error={errorsList.find(x => x.id === metafield.id)}
+                    setErrorsList={setErrorsList}
+                    key={metafield.id}
+                    index={index}
+                    currentItem={currentMetafieldList.current.find(
+                      (x) => x.id === metafield.id
+                    )}
+                    item={metafield}
+                    onDeleteMetafield={handleDeleteMetafield}
+                    onChangeMetafield={handleChangeMetafield}
+                    onSaveMetafield={handleSaveMetafield}
                     />
                   );
                 })}
-            </IndexTable>
+              </IndexTable>
+            ) : (
+              <Banner
+                title="Empty metafields"
+                action={{
+                  content: "Create a new one",
+                  onAction: () => {
+                    setOpenModal(!openModal);
+                    setErrorsList([]);
+                  },
+                }}
+                status="info"
+                onDismiss={() => {}}
+              >
+                <p>You haven't any metafields yet. Create a new one</p>
+              </Banner>
+            )}
           </Card.Section>
         </Tabs>
       </Card>
@@ -271,7 +298,7 @@ function ProductMetafield(props) {
         <Toast
           error={toast.error}
           content={toast.content}
-          duration="4000"
+          duration="2500"
           onDismiss={() => setToast({active: false, content:'', error: false})}
         />
       ) : null}

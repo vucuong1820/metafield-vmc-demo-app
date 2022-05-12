@@ -1,53 +1,65 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { ResourcePicker } from "@shopify/app-bridge-react";
 import { Avatar, Button, InlineError } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 import { GET_PRODUCT_BY_ID } from "../../gql";
 
 function ProductCellModal({ onSetValue, value, error }) {
-  const [skip, setSkip] = React.useState(false);
-  const [product, setProduct] = useState({});
-  const [sourceAvatar, setSourceAvatar] = useState("");
-  const { loading, data } = useQuery(GET_PRODUCT_BY_ID, {
-    variables: { productId: value },
-    skip,
-  });
-  useEffect(() => {
-    if (!loading && !!data) {
-      setSkip(true);
-      setProduct(data);
-    }
-  }, [data, loading]);
+  // const [skip, setSkip] = useState(false);
   const [openProductPicker, setOpenProductPicker] = useState(false);
+  const [product, setProduct] = useState({});
+  const [isBtnLoading, setIsBtnLoading] = useState(true);
+  const [getProductById] = useLazyQuery(GET_PRODUCT_BY_ID);
+  useEffect(() => {
+    (async () => {
+      setIsBtnLoading(true);
+      if (value) {
+        const productData = await getProductById({
+          variables: { productId: value },
+        });
+        if (!productData.loading && !!productData.data)
+          setProduct(productData.data);
+      }
+
+      setIsBtnLoading(false);
+    })();
+  }, [value]);
+
+  // useEffect(() => {
+  //   if (!loading && !!data) {
+  //     setProduct(data);
+  //   }
+  // }, [data, loading]);
   return (
     <>
       <Button
+        loading={isBtnLoading}
         fullWidth
         icon={
           <Avatar
             customer
-            source={sourceAvatar || product?.product?.featuredImage.url}
+            source={product?.product?.featuredImage?.url || ""}
           />
         }
         disclosure="select"
         onClick={() => setOpenProductPicker(true)}
       >
-        {product?.selection?.[0]?.title || "Choose a product"}
+        {product?.product?.title || "Choose a product"}
       </Button>
-      <ResourcePicker // Resource picker component
-        resourceType="Product"
-        allowMultiple={false}
-        showVariants={false}
-        open={openProductPicker}
-        onSelection={(resources) => {
-          // setProduct(resources);
-          setOpenProductPicker(false);
-          // onSetValue(resources);
-          setSourceAvatar(resources.selection[0].images[0].originalSrc);
-          onSetValue(resources.selection[0].id);
-        }}
-        onCancel={() => setOpenProductPicker(false)}
-      />
+      {openProductPicker && (
+        <ResourcePicker // Resource picker component
+          key="ProductPicker"
+          resourceType="Product"
+          allowMultiple={false}
+          showVariants={false}
+          open={openProductPicker}
+          onSelection={(resources) => {
+            onSetValue(resources.selection[0].id);
+            setOpenProductPicker(false);
+          }}
+          onCancel={() => setOpenProductPicker(false)}
+        />
+      )}
       <InlineError message={error || ""} />
     </>
   );

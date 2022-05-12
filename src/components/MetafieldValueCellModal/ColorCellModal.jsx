@@ -11,7 +11,6 @@ import { HexColorPicker } from "react-colorful";
 
 function ColorCellModal({ onSetValue, value, error }) {
   const [activePopoverColor, setActivePopoverColor] = useState(false);
-  // const [color, setColor] = useState("#b32aa9");
 
   const activatorColor = (
     <Button
@@ -27,7 +26,7 @@ function ColorCellModal({ onSetValue, value, error }) {
 
   return (
     <>
-    <ButtonGroup>
+    <ButtonGroup segmented fullWidth>
       <Popover
         active={activePopoverColor}
         activator={activatorColor}
@@ -39,14 +38,13 @@ function ColorCellModal({ onSetValue, value, error }) {
             <HexColorPicker
               color={value}
               onChange={(color) => {
-                // setColor(color);
                 onSetValue(color);
               }}
             />
           </Card.Section>
         </Card>
       </Popover>
-      <div style={{ maxWidth: "150px" }}>
+      <div>
         <TextField error={error ? true : false} value={value} onChange={onSetValue} />
       </div>
     </ButtonGroup>

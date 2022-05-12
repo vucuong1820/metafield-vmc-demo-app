@@ -18,7 +18,6 @@ function Routes(props) {
         <Route path="/product-metafield/:id" component={ProductMetafield} />
         <Route path="/shop-metafield" component={ShopMetafield} />
         <Route path="/product-page"  component={ProductPage} />
-
       </Switch>
     </Frame>
   );

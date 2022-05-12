@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { Button, ButtonGroup, Icon, Listbox, Stack, TextField } from "@shopify/polaris";
-import { CirclePlusMinor } from "@shopify/polaris-icons";
+import { TextField } from "@shopify/polaris";
+import React from "react";
 JsonCell.propTypes = {};
 
 function JsonCell({ onSetValue, value, error }) {
-
 
   return (
     <div>

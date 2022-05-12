@@ -6,23 +6,22 @@ import { useHistory } from 'react-router-dom';
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 function Home(props) {
-  // const { setSelection } = useContext(AppContext)
   const history = useHistory()
   const [open, setOpen] = useState(false);
   
-  const handleSelection = (resources) => {
-    setOpen(false);
-    const productPicked = resources.selection[0]
-    const idProductPicked = productPicked.id.split('/').pop()
-    history.push(`/product-metafield/${idProductPicked}`)
-  };
+  // const handleSelection = (resources) => {
+  //   setOpen(false);
+  //   const productPicked = resources.selection[0]
+  //   const idProductPicked = productPicked.id.split('/').pop()
+  //   history.push(`/product-metafield/${idProductPicked}`)
+  // };
 
   const handleShopAction = () => {
     history.push(`/shop-metafield/`)
   }
   return (
     <Page>
-      <ResourcePicker // Resource picker component
+      {/* <ResourcePicker // Resource picker component
         resourceType="Product"
         allowMultiple={false}
         showVariants={false}
@@ -30,7 +29,7 @@ function Home(props) {
         onSelection={(resources) => handleSelection(resources)}
         onCancel={() => setOpen(false)}
 
-      />
+      /> */}
       <Layout>
         <EmptyState
           heading="Choose your owner metafields"

@@ -1,17 +1,15 @@
 import { Button, ButtonGroup, InlineError } from "@shopify/polaris";
-import React, { useState } from "react";
-import { TickMinor, CancelSmallMinor } from "@shopify/polaris-icons";
+import { CancelSmallMinor, TickMinor } from "@shopify/polaris-icons";
+import React from "react";
 
 function BooleanCellModal({ onSetValue, value, error }) {
-  // const [isPressed, setIsPressed] = useState();
   return (
     <>
-    <ButtonGroup fullWidth>
+    <ButtonGroup fullWidth segmented>
       <Button
         icon={TickMinor}
         pressed={value === "true"}
         onClick={() => {
-          // setIsPressed("true");
           onSetValue("true");
         }}
       >
@@ -21,7 +19,6 @@ function BooleanCellModal({ onSetValue, value, error }) {
         icon={CancelSmallMinor}
         pressed={value === "false"}
         onClick={() => {
-          // setIsPressed("false");
           onSetValue("false");
         }}
       >

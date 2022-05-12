@@ -1,37 +1,16 @@
 import { useLazyQuery } from "@apollo/client";
-import debounce from "lodash.debounce";
 import {
-  Avatar,
-  Badge,
-  Card,
-  ChoiceList,
-  Filters,
-  Page,
-  ButtonGroup,
-  Button,
-  Pagination,
-  RangeSlider,
-  ResourceList,
-  TextField,
-  TextStyle,
-  Thumbnail,
-  Icon,
-  Stack,
-  Popover,
-  ActionList,
-  Tag,
-  RadioButton,
+  ActionList, Badge, Button, ButtonGroup, Card, Page, Popover, RadioButton, ResourceList, Stack, Tag, TextStyle,
+  Thumbnail
 } from "@shopify/polaris";
-import { ArrowDownMinor, ArrowUpMinor } from "@shopify/polaris-icons";
-import { SortMinor } from "@shopify/polaris-icons";
-import { ChevronLeftMinor, ChevronRightMinor } from "@shopify/polaris-icons";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowDownMinor, ArrowUpMinor, ChevronLeftMinor, ChevronRightMinor, SortMinor } from "@shopify/polaris-icons";
+import debounce from "lodash.debounce";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import "./ProductPage.scss";
 import { GET_LIST_PRODUCTS, GET_PRODUCT_VENDORS_TAGS } from "../../gql";
+import "./ProductPage.scss";
 function ProductPage() {
   const history = useHistory();
-  const vendorRef = useRef();
   const [vendorActive, setVendorActive] = useState(false);
   const [tagActive, setTagActive] = useState(false);
   const [statusActive, setStatusActive] = useState(false);
@@ -64,9 +43,6 @@ function ProductPage() {
     hasNextPage: false,
     startCursor: "",
   });
-  const [accountStatus, setAccountStatus] = useState(null);
-  const [moneySpent, setMoneySpent] = useState(null);
-  const [taggedWith, setTaggedWith] = useState(null);
   const queryValue = React.useMemo(() => {
     let result = "";
     for (const key in query) {
@@ -106,6 +82,7 @@ function ProductPage() {
       const data = await getListProducts({
         variables: { ...filtersProductsList, query: queryValue },
       });
+
       setListProducts(data.data.products.edges.map((item) => item.node));
       setCursor({ ...data.data.products.pageInfo });
       setIsLoading(false);
@@ -295,7 +272,9 @@ function ProductPage() {
                                 ...prev,
                                 first: 10,
                                 after: null,
+                                last: null,
                                 reverse: false,
+                                before: null,
                               })),
                           },
                         ]}
