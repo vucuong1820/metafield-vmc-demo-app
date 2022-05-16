@@ -30,6 +30,8 @@ export const GET_METAFIELD = gql`
       metafields(first: 30, reverse: true) {
         edges {
           node {
+            updatedAt
+            createdAt
             id
             namespace
             key
@@ -298,6 +300,8 @@ export const GET_SHOP_INFO = gql`
       metafields(first: 50, reverse:true) {
         edges {
           node {
+            updatedAt
+            createdAt
             namespace
             key
             value

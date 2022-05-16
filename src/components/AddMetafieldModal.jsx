@@ -1,4 +1,4 @@
-import {} from "@shopify/app-bridge-react";
+import { } from "@shopify/app-bridge-react";
 import {
   ActionList,
   Button,
@@ -7,27 +7,16 @@ import {
   IndexTable,
   Modal,
   Popover,
-  TextField,
-  Toast,
+  TextField
 } from "@shopify/polaris";
 import {
-  AttachmentMajor,
+  AnalyticsMajor, AttachmentMajor,
   CalendarMajor,
-  CategoriesMajor,
-  ColorsMajor,
+  CategoriesMajor, CircleDisableMinor, ClockMajor, CodeMajor, ColorsMajor,
   FavoriteMajor,
   GlobeMajor,
-  HashtagMajor,
-  ProductsMajor,
-  RefreshMajor,
-  TypeMajor,
-  CodeMajor,
-  TransactionMajor,
-  AnalyticsMajor,
-  VariantMajor,
-  ClockMajor,
-  PageMajor,
-  CircleDisableMinor
+  HashtagMajor, PageMajor, ProductsMajor,
+  RefreshMajor, TransactionMajor, TypeMajor, VariantMajor
 } from "@shopify/polaris-icons";
 import React, { useCallback, useEffect, useState } from "react";
 import BooleanCellModal from "./MetafieldValueCellModal/BooleanCellModal";
@@ -95,6 +84,7 @@ function AddMetafieldModal({
     switch (type) {
       case "single_line_text_field":
         return {
+          title: "Single line text",
           icon: TypeMajor,
           render: (
             <SingleLineCellModal
@@ -111,6 +101,7 @@ function AddMetafieldModal({
         };
       case "multi_line_text_field":
         return {
+          title: "Multi line text",
           icon: CategoriesMajor,
           render: (
             <MultiLineCellModal
@@ -127,6 +118,7 @@ function AddMetafieldModal({
         };
       case "boolean":
         return {
+          title: "Boolean",
           icon: RefreshMajor,
           render: (
             <BooleanCellModal
@@ -143,6 +135,7 @@ function AddMetafieldModal({
         };
       case "color":
         return {
+          title: "Color",
           icon: ColorsMajor,
           render: (
             <ColorCellModal
@@ -159,6 +152,7 @@ function AddMetafieldModal({
         };
       case "date":
         return {
+          title: "Date",
           icon: CalendarMajor,
           render: (
             <DateCellModal
@@ -175,6 +169,7 @@ function AddMetafieldModal({
         };
       case "date_time":
         return {
+          title: "Date and time",
           icon: ClockMajor,
           render: (
             <DateTimeCell
@@ -192,6 +187,7 @@ function AddMetafieldModal({
         };
       case "number_decimal":
         return {
+          title: "Decimal",
           icon: HashtagMajor,
           render: (
             <NumberDecimalCellModal
@@ -207,6 +203,7 @@ function AddMetafieldModal({
         };
       case "number_integer":
         return {
+          title: "Integer",
           icon: HashtagMajor,
           render: (
             <NumberIntegerCellModal
@@ -222,6 +219,7 @@ function AddMetafieldModal({
         };
       case "dimension":
         return {
+          title: "Dimension",
           icon: HashtagMajor,
           render: (
             <DimensionCellModal
@@ -237,6 +235,7 @@ function AddMetafieldModal({
         };
       case "rating":
         return {
+          title: "Rating",
           icon: FavoriteMajor,
           render: (
             <RatingCellModal
@@ -252,6 +251,7 @@ function AddMetafieldModal({
         };
       case "weight":
         return {
+          title: "Weight",
           icon: TransactionMajor,
           render: (
             <WeightCell
@@ -268,6 +268,7 @@ function AddMetafieldModal({
         };
       case "volume":
         return {
+          title: "Volume",
           icon: AnalyticsMajor,
           render: (
             <VolumeCell
@@ -284,6 +285,7 @@ function AddMetafieldModal({
         };
       case "product_reference":
         return {
+          title: "Product",
           icon: ProductsMajor,
           render: (
             <ProductCellModal
@@ -300,6 +302,7 @@ function AddMetafieldModal({
 
       case "file_reference":
         return {
+          title: "File",
           icon: AttachmentMajor,
           render: (
             <FileCellModal
@@ -316,6 +319,7 @@ function AddMetafieldModal({
         };
       case "variant_reference":
         return {
+          title: "Variant",
           icon: VariantMajor,
           render: (
             <VariantCell
@@ -332,6 +336,7 @@ function AddMetafieldModal({
         };
       case "url":
         return {
+          title: "URL",
           icon: GlobeMajor,
           render: (
             <UrlCellModal
@@ -348,6 +353,7 @@ function AddMetafieldModal({
 
       case "json":
         return {
+          title: "JSON String",
           icon: CodeMajor,
           render: (
             <JsonCell
@@ -365,6 +371,7 @@ function AddMetafieldModal({
 
       case "page_reference":
         return {
+          title: "Page",
           icon: PageMajor,
           render: (
             <PageCell
@@ -380,6 +387,7 @@ function AddMetafieldModal({
         };
       default:
         return {
+          title: "Default",
           icon: CircleDisableMinor,
           render: (
             <DefaultCell
@@ -422,7 +430,7 @@ function AddMetafieldModal({
     "page_reference",
   ];
   const listTypeMarkup = listType2.map((item) => ({
-    content: item,
+    content: switchTypeValue(item).title,
     icon: switchTypeValue(item).icon,
     onAction: () => {
       setActive(false);

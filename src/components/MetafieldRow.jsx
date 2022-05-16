@@ -79,6 +79,7 @@ function MetafieldRow({
     switch (type) {
       case "single_line_text_field":
         return {
+          title: "Single line text",
           icon: TypeMajor,
           render: (
             <SingleLineCellModal
@@ -91,6 +92,8 @@ function MetafieldRow({
         };
       case "multi_line_text_field":
         return {
+          title: "Multi line text",
+
           icon: CategoriesMajor,
           render: (
             <MultiLineCellModal
@@ -102,6 +105,7 @@ function MetafieldRow({
         };
       case "boolean":
         return {
+          title: "Boolean",
           icon: RefreshMajor,
           render: (
             <BooleanCellModal
@@ -113,6 +117,7 @@ function MetafieldRow({
         };
       case "color":
         return {
+          title: "Color",
           icon: ColorsMajor,
           render: (
             <ColorCellModal
@@ -124,6 +129,7 @@ function MetafieldRow({
         };
       case "date":
         return {
+          title: "Date",
           icon: CalendarMajor,
           render: (
             <DateCellModal
@@ -135,6 +141,7 @@ function MetafieldRow({
         };
       case "date_time":
         return {
+          title: "Date and time",
           icon: ClockMajor,
           render: (
             <DateTimeCell
@@ -146,6 +153,7 @@ function MetafieldRow({
         };
       case "number_decimal":
         return {
+          title: "Decimal",
           icon: HashtagMajor,
           render: (
             <NumberDecimalCellModal
@@ -157,6 +165,7 @@ function MetafieldRow({
         };
       case "number_integer":
         return {
+          title: "Integer",
           icon: HashtagMajor,
           render: (
             <NumberIntegerCellModal
@@ -168,6 +177,7 @@ function MetafieldRow({
         };
       case "dimension":
         return {
+          title: "Dimension",
           icon: HashtagMajor,
           render: (
             <DimensionCellModal
@@ -179,6 +189,7 @@ function MetafieldRow({
         };
       case "product_reference":
         return {
+          title: "Product",
           icon: ProductsMajor,
           render: (
             <ProductCellModal
@@ -190,6 +201,7 @@ function MetafieldRow({
         };
       case "file_reference":
         return {
+          title: "File",
           icon: AttachmentMajor,
           render: (
             <FileCellModal
@@ -201,6 +213,7 @@ function MetafieldRow({
         };
       case "variant_reference":
         return {
+          title: "Variant",
           icon: VariantMajor,
           render: (
             <VariantCell
@@ -212,6 +225,7 @@ function MetafieldRow({
         };
       case "rating":
         return {
+          title: "Rating",
           icon: FavoriteMajor,
           render: (
             <RatingCellModal
@@ -223,6 +237,7 @@ function MetafieldRow({
         };
       case "volume":
         return {
+          title: "Volume",
           icon: AnalyticsMajor,
           render: (
             <VolumeCell
@@ -234,6 +249,7 @@ function MetafieldRow({
         };
       case "weight":
         return {
+          title: "Weight",
           icon: TransactionMajor,
           render: (
             <WeightCell
@@ -245,6 +261,7 @@ function MetafieldRow({
         };
       case "url":
         return {
+          title: "URL",
           icon: GlobeMajor,
           render: (
             <UrlCellModal
@@ -257,6 +274,7 @@ function MetafieldRow({
 
       case "json":
         return {
+          title: "JSON String",
           icon: CodeMajor,
           render: (
             <JsonCell
@@ -269,6 +287,7 @@ function MetafieldRow({
 
       case "page_reference":
         return {
+          title: "Page",
           icon: PageMajor,
           render: (
             <PageCell
@@ -282,6 +301,7 @@ function MetafieldRow({
 
       default:
         return {
+          title: "Default",
           icon: CircleDisableMinor,
           render: (
             <DefaultCell

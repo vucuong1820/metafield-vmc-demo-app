@@ -51,15 +51,3 @@
     }
 }
 
-.filter-wrapper {
-    display: flex;
-    margin-bottom: 18px;
-    .Polaris-ButtonGroup > .Polaris-ButtonGroup__Item:first-child button{
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-    }
-}
-
-.filter-tags .Polaris-Tag {
-    margin-right:8px;
-}

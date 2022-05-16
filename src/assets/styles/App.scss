@@ -77,20 +77,6 @@
 .Polaris-Labelled__Error {
     position: relative;
 }
-/* .Polaris-IndexTable__TableCell #PolarisTextField30Error {
-    white-space: nowrap;
-    text-overflow: clip; 
-    position: absolute;
-    overflow: hidden;
-    left:-50px;
-    transition:all 600ms;
-}
-.Polaris-IndexTable__TableCell #PolarisTextField30Error:hover {
-    opacity:1;
-   position:absolute;
-   left: 40px;
-   transition:all 600ms;
-} */
 
 .Polaris-IndexTable__TableCell .Polaris-InlineError {
     width: 100%;
@@ -100,4 +86,37 @@
 .page-filter .Polaris-ButtonGroup {
     display: grid;
     grid-template-columns: 1fr auto;
+}
+
+.filter-wrapper {
+    display: flex;
+    margin-bottom: 18px;
+    flex-flow: wrap;
+    .Polaris-ButtonGroup > .Polaris-ButtonGroup__Item:first-child button{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .Polaris-TextField {
+        width:500px;
+    }
+
+     & > div:first-child {
+        flex: 1;
+
+        .Polaris-TextField {
+            width: 100%;
+        }
+    }
+    .Polaris-ActionList__Actions {
+        width: 180px;
+    }
+}
+
+.filter-tags .Polaris-Tag {
+    margin-right:8px;
+}
+
+.Polaris-ActionList__Actions {
+    width: 180px;
 }

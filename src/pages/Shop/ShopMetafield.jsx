@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useHistory } from "react-router-dom";
 import { Loading } from "@shopify/app-bridge-react";
 import {
   Banner,
@@ -8,39 +7,47 @@ import {
   Icon,
   IndexTable,
   Page,
-  Tabs,
-  TextStyle,
-  Toast,
+  Tabs, Toast
 } from "@shopify/polaris";
-import { ViewMajor, RefreshMajor } from "@shopify/polaris-icons";
+import { RefreshMajor } from "@shopify/polaris-icons";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import AddMetafieldModal from "../../components/AddMetafieldModal";
 import MetafieldRow from "../../components/MetafieldRow";
+import MetafieldsFilter from "../../components/MetafieldsFilter";
 import {
   CREATE_METAFIELD,
   DELETE_METAFIELD,
   GET_SHOP_INFO,
-  UPDATE_SHOP_METAFIELD,
+  UPDATE_SHOP_METAFIELD
 } from "../../gql";
 
 function ShopMetafield(props) {
   const history = useHistory();
-  const [refreshLoading, setRefreshLoading] = useState(false)
+  const [refreshLoading, setRefreshLoading] = useState(false);
   const [metafieldsList, setMetafieldsList] = useState([]);
   const [shopInfo, setShopInfo] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [isDisabledFilter, setIsDisabledFilter] = useState(true);
   const [errorsList, setErrorsList] = useState([]);
+  const [namespaceList, setNamespaceList] = useState([])
+  const [typeList, setTypeList] = useState([])
   const [toast, setToast] = useState({
     active: false,
     content: "",
     error: false,
   });
   const currentMetafieldList = useRef();
-
   const { loading, data, refetch } = useQuery(GET_SHOP_INFO);
   const [deleteMetafield, {}] = useMutation(DELETE_METAFIELD);
   const [updateShopMetafield, {}] = useMutation(UPDATE_SHOP_METAFIELD);
   const [createMetafield, {}] = useMutation(CREATE_METAFIELD);
+  const [filterList, setFilterList] = useState({
+    namespaceList: [],
+    typeList: [],
+    searchTerm: "",
+    sort: ["updatedAt", "DESC"],
+  });
 
   useEffect(() => {
     if (!loading && !!data) {
@@ -48,14 +55,75 @@ function ShopMetafield(props) {
       const metafieldsListData =
         data && data?.shop.metafields.edges.map((item) => item.node);
       currentMetafieldList.current = metafieldsListData;
-      setMetafieldsList(metafieldsListData);
+      setNamespaceList([...new Set(metafieldsListData.map(metafield => metafield.namespace))])
+      setTypeList([...new Set(metafieldsListData.map(metafield => metafield.type))])
+      const newMetafieldsList = metafieldsListData.filter((metafield) => {
+        if (
+          filterList.namespaceList.length <= 0 &&
+          filterList.typeList.length > 0
+        )
+          return (
+            filterList.typeList.includes(metafield.type) &&
+            (metafield.value.includes(filterList.searchTerm) ||
+              metafield.key.includes(filterList.searchTerm))
+          );
+        if (
+          filterList.namespaceList.length <= 0 &&
+          filterList.typeList.length <= 0
+        )
+          return (
+            metafield.value.includes(filterList.searchTerm) ||
+            metafield.key.includes(filterList.searchTerm)
+          );
+        if (
+          filterList.namespaceList.length > 0 &&
+          filterList.typeList.length <= 0
+        )
+          return (
+            filterList.namespaceList.includes(metafield.namespace) &&
+            (metafield.value.includes(filterList.searchTerm) ||
+              metafield.key.includes(filterList.searchTerm))
+          );
+        return (
+          filterList.namespaceList.includes(metafield.namespace) &&
+          filterList.typeList.includes(metafield.type) &&
+          (metafield.value.includes(filterList.searchTerm) ||
+            metafield.key.includes(filterList.searchTerm))
+        );
+      });
+      setMetafieldsList(handleSortMetafields(newMetafieldsList,filterList.sort));
+
+      setIsDisabledFilter(false);
+      // setMetafieldsList(metafieldsListData);
       setShopInfo({
         id: data.shop.id,
         name: data.shop.name,
         url: data.shop.url,
       });
     }
-  }, [loading, data]);
+  }, [loading, data, filterList]);
+
+  const handleSortMetafields = useCallback(
+    (metafieldsListNeedToSort, sort) => {
+      const metafieldsListClone = [...metafieldsListNeedToSort]
+      const fieldSort = sort[0];
+      const sortType = sort[1];
+
+      if (fieldSort === "updatedAt" || fieldSort === "createdAt") {
+        return metafieldsListClone.sort((first, second) =>
+          sortType === "ASC"
+            ? new Date(first[fieldSort]).getTime() -
+              new Date(second[fieldSort]).getTime()
+            : new Date(second[fieldSort]).getTime() -
+              new Date(first[fieldSort]).getTime()
+        );
+      }
+
+      return metafieldsListClone.sort((first, second) => sortType === "DESC" ? second[fieldSort].localeCompare(first[fieldSort]) : first[fieldSort].localeCompare(second[fieldSort]) )
+
+    }, []
+  );
+
   const handleChangeMetafield = (newValue, id) => {
     const metafieldChanged = metafieldsList.find((x) => x.id === id);
     const indexOfMetafieldChanged = metafieldsList.findIndex(
@@ -117,10 +185,14 @@ function ShopMetafield(props) {
           };
           delete cloneItem.__typename;
           delete cloneItem.id;
+          delete cloneItem.createdAt;
+          delete cloneItem.updatedAt;
         } else {
           cloneItem = { ...item };
           delete cloneItem.__typename;
           delete cloneItem.id;
+          delete cloneItem.createdAt;
+          delete cloneItem.updatedAt;
         }
 
         console.log("data send:", {
@@ -153,26 +225,11 @@ function ShopMetafield(props) {
           });
           return;
         }
-        const { id, key, namespace, type, value } =
-          data.data.metafieldsSet.metafields[0];
-        const indexOfMetafieldUpdated = currentMetafieldList.current.findIndex(
-          (x) => x.id === id
-        );
-        currentMetafieldList.current[indexOfMetafieldUpdated] = {
-          id,
-          key,
-          namespace,
-          type,
-          value,
-        };
+        await refetch();
+
         setErrorsList([]);
+        
         setToast({ active: true, content: "Metafield saved!", error: false });
-        setMetafieldsList((prev) => {
-          const index = prev.findIndex((x) => x.id === id);
-          prev[index] = { id, key, namespace, type, value };
-          return prev;
-        });
-        //   currentMetafieldList.current = metafieldsListUpdated;
       } catch (error) {
         setToast({
           active: true,
@@ -253,10 +310,10 @@ function ShopMetafield(props) {
           content: "Refresh",
           accessibilityLabel: "Refresh list",
           onAction: async () => {
-            setRefreshLoading(true)
+            setRefreshLoading(true);
             await refetch();
-            setRefreshLoading(false)
-            setToast({active: true, content: "Refreshed!", error: false})
+            setRefreshLoading(false);
+            setToast({ active: true, content: "Refreshed!", error: false });
           },
           icon: () => <Icon source={RefreshMajor} color="base" />,
         },
@@ -269,6 +326,7 @@ function ShopMetafield(props) {
         openModal={openModal}
         setOpenModal={setOpenModal}
         onAddMetafield={handleAddMetafield}
+        
       />
       <Card>
         <Tabs
@@ -281,8 +339,15 @@ function ShopMetafield(props) {
             },
           ]}
           selected={0}
-          onSelect={() => console.log("123")}
+          onSelect={() => console.log('123')}
         >
+          <MetafieldsFilter
+            namespaceList={namespaceList}
+            typeList={typeList}
+            disabled={isDisabledFilter}
+            filterList={filterList}
+            onChangeFilterList={(newValue) =>  setFilterList(newValue)}
+          />
           <Card.Section>
             {metafieldsList.length > 0 ? (
               <IndexTable

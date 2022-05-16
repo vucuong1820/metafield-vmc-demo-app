@@ -17,7 +17,7 @@ import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./routes/AppRouter";
 import Routes from "./routes/Routes";
-import "./assets/styles/App.css"
+import "./assets/styles/App.scss"
 
 export default function App() {
   const [selection, setSelection] = useState({});

@@ -1,28 +1,26 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { Loading } from "@shopify/app-bridge-react";
-import { useHistory } from 'react-router-dom';
-import { Modal } from "@shopify/app-bridge/actions";
 import {
   Banner,
   Button,
   Card,
   Icon,
   IndexTable,
-  Page,
-  Tabs,
-  Toast,
-  
+  Page, Tabs,
+  Toast
 } from "@shopify/polaris";
-import { ViewMajor, RefreshMajor } from "@shopify/polaris-icons";
+import { RefreshMajor } from "@shopify/polaris-icons";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useHistory } from 'react-router-dom';
 import AddMetafieldModal from "../../components/AddMetafieldModal";
 import MetafieldRow from "../../components/MetafieldRow";
+import MetafieldsFilter from "../../components/MetafieldsFilter";
 import {
   CREATE_METAFIELD,
   DELETE_METAFIELD,
   GET_METAFIELD,
   GET_PRODUCT_BY_ID,
-  UPDATE_METAFIELD,
+  UPDATE_METAFIELD
 } from "../../gql";
 
 function ProductMetafield(props) {
@@ -36,6 +34,15 @@ function ProductMetafield(props) {
     content: '',
     error: false,
   })
+  const [filterList, setFilterList] = useState({
+    namespaceList: [],
+    typeList: [],
+    searchTerm: "",
+    sort: ["updatedAt", "DESC"],
+  });
+  const [namespaceList, setNamespaceList] = useState([])
+  const [typeList, setTypeList] = useState([])
+  const [isDisabledFilter, setIsDisabledFilter] = useState(true);
 
   const currentMetafieldList = useRef();
   const productId = `gid://shopify/Product/${props.match.params.id}`;
@@ -69,12 +76,73 @@ function ProductMetafield(props) {
         metafields.data &&
         metafields.data?.product.metafields.edges.map((item) => item.node);
       currentMetafieldList.current = metafieldsListData;
-      setMetafieldsList(metafieldsListData);
+      setNamespaceList([...new Set(metafieldsListData.map(metafield => metafield.namespace))])
+      setTypeList([...new Set(metafieldsListData.map(metafield => metafield.type))])
+      const newMetafieldsList = metafieldsListData.filter((metafield) => {
+        if (
+          filterList.namespaceList.length <= 0 &&
+          filterList.typeList.length > 0
+        )
+          return (
+            filterList.typeList.includes(metafield.type) &&
+            (metafield.value.includes(filterList.searchTerm) ||
+              metafield.key.includes(filterList.searchTerm))
+          );
+        if (
+          filterList.namespaceList.length <= 0 &&
+          filterList.typeList.length <= 0
+        )
+          return (
+            metafield.value.includes(filterList.searchTerm) ||
+            metafield.key.includes(filterList.searchTerm)
+          );
+        if (
+          filterList.namespaceList.length > 0 &&
+          filterList.typeList.length <= 0
+        )
+          return (
+            filterList.namespaceList.includes(metafield.namespace) &&
+            (metafield.value.includes(filterList.searchTerm) ||
+              metafield.key.includes(filterList.searchTerm))
+          );
+        return (
+          filterList.namespaceList.includes(metafield.namespace) &&
+          filterList.typeList.includes(metafield.type) &&
+          (metafield.value.includes(filterList.searchTerm) ||
+            metafield.key.includes(filterList.searchTerm))
+        );
+      });
+      setMetafieldsList(handleSortMetafields(newMetafieldsList,filterList.sort));
+      setIsDisabledFilter(false);
+
     }
   }, [
     metafields.loading,
     metafields.data,
+    filterList
   ]);
+
+  const handleSortMetafields = useCallback(
+    (metafieldsListNeedToSort, sort) => {
+      const metafieldsListClone = [...metafieldsListNeedToSort]
+      const fieldSort = sort[0];
+      const sortType = sort[1];
+
+      if (fieldSort === "updatedAt" || fieldSort === "createdAt") {
+        return metafieldsListClone.sort((first, second) =>
+          sortType === "ASC"
+            ? new Date(first[fieldSort]).getTime() -
+              new Date(second[fieldSort]).getTime()
+            : new Date(second[fieldSort]).getTime() -
+              new Date(first[fieldSort]).getTime()
+        );
+      }
+
+      return metafieldsListClone.sort((first, second) => sortType === "DESC" ? second[fieldSort].localeCompare(first[fieldSort]) : first[fieldSort].localeCompare(second[fieldSort]) )
+
+    }, []
+  );
+
   const handleDeleteMetafield = useCallback(async (id) => {
     try {
       const data = await deleteMetafield({
@@ -146,10 +214,14 @@ function ProductMetafield(props) {
           value: `${item.value}:00+00:00`
         }
         delete cloneItem.__typename;
+        delete cloneItem.createdAt;
+        delete cloneItem.updatedAt;
        
       }else {
         cloneItem = { ...item };
         delete cloneItem.__typename;
+        delete cloneItem.createdAt;
+        delete cloneItem.updatedAt;
       }
       console.log("data send:", cloneItem);
       const data = await updateMetafield({
@@ -243,6 +315,13 @@ function ProductMetafield(props) {
           selected={0}
           onSelect={() => console.log("123")}
         >
+          <MetafieldsFilter
+            namespaceList={namespaceList}
+            typeList={typeList}
+            disabled={isDisabledFilter}
+            filterList={filterList}
+            onChangeFilterList={(newValue) =>  setFilterList(newValue)}
+          />
           <Card.Section>
           {metafieldsList.length > 0 ? (
               <IndexTable
