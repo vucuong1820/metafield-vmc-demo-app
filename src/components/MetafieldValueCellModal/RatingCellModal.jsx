@@ -10,7 +10,6 @@ function RatingCellModal({ onSetValue, value, error }) {
       [key]: value
     }))
   }
-  
   return (
     <>
     <ButtonGroup segmented fullWidth>
@@ -22,7 +21,7 @@ function RatingCellModal({ onSetValue, value, error }) {
           step="1"
           min={currentRating.scale_min}
           max={currentRating.scale_max}
-          value={Number.parseInt(currentRating.value).toString()}
+          value={currentRating.value ? Number.parseInt(currentRating.value)?.toString() : ""}
           onChange={(value) => {
             handleRatingInput("value",value);
           }}
@@ -34,7 +33,7 @@ function RatingCellModal({ onSetValue, value, error }) {
           step="1"
           error={error ?  true : false}
           prefix="Min"
-          value={Number.parseInt(currentRating.scale_min).toString()}
+          value={currentRating.scale_min ? Number.parseInt(currentRating.scale_min)?.toString() : ""}
           onChange={(value) => {
             handleRatingInput("scale_min",value);
           }}
@@ -46,7 +45,7 @@ function RatingCellModal({ onSetValue, value, error }) {
           step="1"
           error={error ?  true : false}
           prefix="Max"
-          value={Number.parseInt(currentRating.scale_max).toString()}
+          value={currentRating.scale_max ? Number.parseInt(currentRating.scale_max)?.toString() : ""}
           onChange={(value) => {
             handleRatingInput("scale_max",value)
           }}

@@ -156,7 +156,7 @@ function ShopMetafield(props) {
       await refetch();
       // setMetafieldsList(newMetafieldsList);
       // currentMetafieldList.current = newMetafieldsList;
-      console.log("Delete successfully");
+      // console.log("Delete successfully");
       setToast({
         active: true,
         content: "Delete metafield sucessfully!",
@@ -175,7 +175,7 @@ function ShopMetafield(props) {
   const handleSaveMetafield = useCallback(
     async (item) => {
       try {
-        console.log("start to save");
+        // console.log("start to save");
 
         let cloneItem = {};
         if (item.type === "date_time") {
@@ -195,10 +195,10 @@ function ShopMetafield(props) {
           delete cloneItem.updatedAt;
         }
 
-        console.log("data send:", {
-          ...cloneItem,
-          ownerId: shopInfo.id,
-        });
+        // console.log("data send:", {
+        //   ...cloneItem,
+        //   ownerId: shopInfo.id,
+        // });
         const data = await updateShopMetafield({
           variables: {
             metafields: [
@@ -209,7 +209,7 @@ function ShopMetafield(props) {
             ],
           },
         });
-        console.log(data);
+        // console.log(data);
         if (data.data.metafieldsSet.userErrors.length > 0) {
           setErrorsList(
             data.data.metafieldsSet.userErrors.map((x) => ({
@@ -245,7 +245,7 @@ function ShopMetafield(props) {
 
   const handleAddMetafield = useCallback(async (dataObj) => {
     try {
-      console.log("add metafield, data send:", dataObj);
+      // console.log("add metafield, data send:", dataObj);
       const dataAdded = await createMetafield({
         variables: {
           metafields: [dataObj],

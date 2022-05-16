@@ -157,7 +157,7 @@ function ProductMetafield(props) {
         return
       }
       await metafields.refetch();
-      console.log("Delete successfully");
+      // console.log("Delete successfully");
       setToast({active: true, content: "Delete metafield sucessfully!", error: false})
     } catch (error) {
       setToast({active: true, content: "Failed to delete metafield. Please try again later or reload this page!", error: true })
@@ -178,7 +178,7 @@ function ProductMetafield(props) {
 
   const handleAddMetafield = useCallback(async (dataObj) => {
     try {
-      console.log("add metafield, data send:", dataObj);
+      // console.log("add metafield, data send:", dataObj);
       const data = await createMetafield({
         variables: {
           metafields: [dataObj],
@@ -206,7 +206,7 @@ function ProductMetafield(props) {
 
   const handleSaveMetafield = useCallback(async (item) => {
     try {
-      console.log("start to save");
+      // console.log("start to save");
       let cloneItem = {}
       if (item.type === "date_time") {
         cloneItem = {
@@ -223,7 +223,7 @@ function ProductMetafield(props) {
         delete cloneItem.createdAt;
         delete cloneItem.updatedAt;
       }
-      console.log("data send:", cloneItem);
+      // console.log("data send:", cloneItem);
       const data = await updateMetafield({
         variables: {
           input: {
@@ -236,7 +236,7 @@ function ProductMetafield(props) {
           },
         },
       });
-      console.log(data)
+      // console.log(data)
       if(data.data.productUpdate.userErrors.length > 0) {
         setErrorsList(data.data.productUpdate.userErrors.map(item => ({
           id: cloneItem.id ,
@@ -246,7 +246,7 @@ function ProductMetafield(props) {
         setToast({active: true, content:data.data.productUpdate.userErrors[0].message, error: true})
         return;
       }
-      console.log(data)
+      // console.log(data)
       const {id, key, namespace, type, value} = data.data.productUpdate.product.metafields.edges[0].node
       const indexOfMetafieldUpdated = currentMetafieldList.current.findIndex(x => x.id === id)
       currentMetafieldList.current[indexOfMetafieldUpdated] = {id, key, namespace, type, value};

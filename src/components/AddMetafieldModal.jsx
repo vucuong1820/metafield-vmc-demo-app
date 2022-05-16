@@ -513,7 +513,7 @@ function AddMetafieldModal({
         setOpenModal(false);
       }
     } else {
-      console.log("start save");
+      // console.log("start save");
       const result = await onAddMetafield({
         ...metafield,
         type,

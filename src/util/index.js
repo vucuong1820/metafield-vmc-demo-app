@@ -18,7 +18,7 @@ export const getMetafieldsByProductId = (productId) => {
   });
   // const [metafieldsList, setMetafieldsList] = useState(() => data?.product.metafields.edges.map(item => item.node))
   setMetafieldsList(data?.product.metafields.edges.map((item) => item.node));
-  console.log(metafieldsList, productId, data);
+  // console.log(metafieldsList, productId, data);
   return { loading, metafieldsList, setMetafieldsList };
 };
 
