@@ -1,7 +1,7 @@
 import { TextField } from "@shopify/polaris";
 import React from "react";
 
-function SingleLineCellModal({ onSetValue, value, error }) {
+function StringCell({ onSetValue, value, error }) {
   return (
     <TextField
       error={error || false}
@@ -13,4 +13,4 @@ function SingleLineCellModal({ onSetValue, value, error }) {
   );
 }
 
-export default SingleLineCellModal;
+export default StringCell;

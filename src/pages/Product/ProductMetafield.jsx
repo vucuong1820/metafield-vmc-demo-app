@@ -279,20 +279,20 @@ function ProductMetafield(props) {
           Create metafields
         </Button>
       }
-      secondaryActions={[
-        {
-          loading: refreshLoading,
-          content: "Refresh",
-          accessibilityLabel: "Refresh list",
-          onAction: async () => {
-            setRefreshLoading(true)
-            await metafields.refetch();
-            setRefreshLoading(false)
-            setToast({active: true, content: "Refreshed!", error: false})
-          },
-          icon: () => <Icon source={RefreshMajor} color="base" />,
-        },
-      ]}
+      // secondaryActions={[
+      //   {
+      //     loading: refreshLoading,
+      //     content: "Refresh",
+      //     accessibilityLabel: "Refresh list",
+      //     onAction: async () => {
+      //       setRefreshLoading(true)
+      //       await metafields.refetch();
+      //       setRefreshLoading(false)
+      //       setToast({active: true, content: "Refreshed!", error: false})
+      //     },
+      //     icon: () => <Icon source={RefreshMajor} color="base" />,
+      //   },
+      // ]}
     >
       <AddMetafieldModal
         errorsList={errorsList}

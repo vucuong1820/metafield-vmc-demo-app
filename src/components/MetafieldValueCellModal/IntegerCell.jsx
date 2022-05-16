@@ -1,11 +1,12 @@
 import { TextField } from "@shopify/polaris";
 import React from "react";
 
-function SingleLineCellModal({ onSetValue, value, error }) {
+function IntegerCell({ onSetValue, value, error }) {
   return (
     <TextField
       error={error || false}
-      value={value || ""}
+      type="number"
+      value={value ? value : ""}
       onChange={(value) => {
         onSetValue(value);
       }}
@@ -13,4 +14,4 @@ function SingleLineCellModal({ onSetValue, value, error }) {
   );
 }
 
-export default SingleLineCellModal;
+export default IntegerCell;

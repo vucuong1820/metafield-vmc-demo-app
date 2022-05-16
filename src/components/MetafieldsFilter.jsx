@@ -1,22 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PropTypes from "prop-types";
-import { ArrowDownMinor, ArrowUpMinor, ChevronLeftMinor, ChevronRightMinor, SortMinor } from "@shopify/polaris-icons";
-
 import {
-  Button,
+  ActionList, Button,
   ButtonGroup,
-  Card,
-  Popover,
-  TextField,
-  Icon,
-  TextStyle,
-  Stack,
-  ChoiceList,
-  Tag,
-  RadioButton,
-  ActionList,
+  Card, ChoiceList, Icon, Popover, RadioButton, Stack, Tag, TextField, TextStyle
 } from "@shopify/polaris";
-import { SearchMinor } from "@shopify/polaris-icons";
+import {
+  ArrowDownMinor,
+  ArrowUpMinor, SearchMinor
+} from "@shopify/polaris-icons";
+import React, { useCallback, useState } from "react";
+
 MetafieldsFilter.propTypes = {};
 
 function MetafieldsFilter({
@@ -24,12 +16,12 @@ function MetafieldsFilter({
   onChangeFilterList,
   disabled,
   typeList,
-  namespaceList
+  namespaceList,
 }) {
   const [popoverNamespaceActive, setPopoverNamespaceActive] = useState(false);
   const [popoverTypeActive, setPopoverTypeActive] = useState(false);
   const [popoverSortActive, setPopoverSortActive] = useState(false);
-  const [sortField, setSortField] = useState("createdAt")
+  const [sortField, setSortField] = useState("createdAt");
   const sortKeys = React.useMemo(
     () => [
       {
@@ -52,23 +44,23 @@ function MetafieldsFilter({
     []
   );
   const getContentSortType = useCallback((sortType) => {
-      switch (sortType) {
-        case "key":
-        case "namespace":
-          return {
-            desc: "Z-A",
-            asc: "A-Z"
-          }
-        case "createdAt":
-        case "updatedAt":
-          return {
-            desc: "Newest to Oldest",
-            asc: "Oldest to Newest"
-          }
-        default:
-          break;
-      }
-  }, [])
+    switch (sortType) {
+      case "key":
+      case "namespace":
+        return {
+          desc: "Z-A",
+          asc: "A-Z",
+        };
+      case "createdAt":
+      case "updatedAt":
+        return {
+          desc: "Newest to Oldest",
+          asc: "Oldest to Newest",
+        };
+      default:
+        break;
+    }
+  }, []);
 
   const getTypeLabel = useCallback((type) => {
     switch (type) {
@@ -108,6 +100,12 @@ function MetafieldsFilter({
         return "JSON String";
       case "page_reference":
         return "Page";
+      case "string":
+        return "String (Old)";
+      case "json_string":
+        return "JSON String (Old)";
+      case "integer":
+        return "Integer (Old)";
       default:
         return "Not Found";
     }
@@ -125,10 +123,10 @@ function MetafieldsFilter({
     []
   );
   const handleChangeSortField = useCallback((_checked, newValue) => {
-    setSortField(newValue)
-    const newFilterList = {...filterList};
-    newFilterList.sort[0] = newValue
-    onChangeFilterList(newFilterList)
+    setSortField(newValue);
+    const newFilterList = { ...filterList };
+    newFilterList.sort[0] = newValue;
+    onChangeFilterList(newFilterList);
   }, []);
   const namespaceActivator = (
     <Button
@@ -167,15 +165,17 @@ function MetafieldsFilter({
           onChange={(value) =>
             onChangeFilterList({
               ...filterList,
-              searchTerm: value
+              searchTerm: value,
             })
           }
           clearButton
           autoComplete="off"
-          onClearButtonClick={() => onChangeFilterList({
-            ...filterList,
-            searchTerm: ""
-          })}
+          onClearButtonClick={() =>
+            onChangeFilterList({
+              ...filterList,
+              searchTerm: "",
+            })
+          }
           prefix={<Icon source={SearchMinor} color="base" />}
           fullWidth
           placeholder="Search metafields by key or value"
@@ -198,7 +198,7 @@ function MetafieldsFilter({
                 onChange={(value) => {
                   onChangeFilterList({
                     ...filterList,
-                    namespaceList: value
+                    namespaceList: value,
                   });
                 }}
               />
@@ -206,7 +206,7 @@ function MetafieldsFilter({
                 plain
                 disabled={filterList.namespaceList.length <= 0}
                 onClick={() =>
-                  onChangeFilterList({...filterList,namespaceList: [] })
+                  onChangeFilterList({ ...filterList, namespaceList: [] })
                 }
               >
                 Clear
@@ -228,14 +228,14 @@ function MetafieldsFilter({
                 }))}
                 selected={filterList.typeList}
                 onChange={(value) => {
-                  onChangeFilterList({...filterList,typeList: value});
+                  onChangeFilterList({ ...filterList, typeList: value });
                 }}
               />
               <Button
                 plain
                 disabled={filterList.typeList.length <= 0}
                 onClick={() =>
-                  onChangeFilterList({...filterList,typeList: []})
+                  onChangeFilterList({ ...filterList, typeList: [] })
                 }
               >
                 Clear
@@ -276,20 +276,20 @@ function MetafieldsFilter({
                   // active: filtersProductsList.reverse === true,
                   content: getContentSortType(filterList.sort[0]).desc,
                   icon: ArrowDownMinor,
-                  onAction: () =>{
-                    const newFilterList = {...filterList}
-                    newFilterList.sort[1] = "DESC"
-                    onChangeFilterList(newFilterList)
+                  onAction: () => {
+                    const newFilterList = { ...filterList };
+                    newFilterList.sort[1] = "DESC";
+                    onChangeFilterList(newFilterList);
                   },
                 },
                 {
                   active: filterList.sort[1] === "ASC",
                   content: getContentSortType(filterList.sort[0]).asc,
                   icon: ArrowUpMinor,
-                  onAction: () =>{
-                    const newFilterList = {...filterList}
-                    newFilterList.sort[1] = "ASC"
-                    onChangeFilterList(newFilterList)
+                  onAction: () => {
+                    const newFilterList = { ...filterList };
+                    newFilterList.sort[1] = "ASC";
+                    onChangeFilterList(newFilterList);
                   },
                 },
               ]}
@@ -302,7 +302,7 @@ function MetafieldsFilter({
           <Tag
             // key={}
             onRemove={() =>
-              onChangeFilterList({...filterList,namespaceList: []})
+              onChangeFilterList({ ...filterList, namespaceList: [] })
             }
             disabled={false}
           >
@@ -318,9 +318,7 @@ function MetafieldsFilter({
         {filterList.typeList.length > 0 && (
           <Tag
             // key={}
-            onRemove={() =>
-              onChangeFilterList({...filterList, typeList: []})
-            }
+            onRemove={() => onChangeFilterList({ ...filterList, typeList: [] })}
             disabled={false}
           >
             Type:

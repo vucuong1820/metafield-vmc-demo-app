@@ -33,7 +33,9 @@ import DateTimeCell from "./MetafieldValueCellModal/DateTimeCell";
 import DefaultCell from "./MetafieldValueCellModal/DefaultCell";
 import DimensionCellModal from "./MetafieldValueCellModal/DimensionCellModal";
 import FileCellModal from "./MetafieldValueCellModal/FileCellModal";
+import IntegerCell from "./MetafieldValueCellModal/IntegerCell";
 import JsonCell from "./MetafieldValueCellModal/JsonCell";
+import JsonStringCell from "./MetafieldValueCellModal/JsonStringCell";
 import MultiLineCellModal from "./MetafieldValueCellModal/MultiLineCellModal";
 import NumberDecimalCellModal from "./MetafieldValueCellModal/NumberDecimalCellModal";
 import NumberIntegerCellModal from "./MetafieldValueCellModal/NumberIntegerCellModal";
@@ -41,6 +43,7 @@ import PageCell from "./MetafieldValueCellModal/PageCell";
 import ProductCellModal from "./MetafieldValueCellModal/ProductCellModal";
 import RatingCellModal from "./MetafieldValueCellModal/RatingCellModal";
 import SingleLineCellModal from "./MetafieldValueCellModal/SingleLineCellModal";
+import StringCell from "./MetafieldValueCellModal/StringCell";
 import UrlCellModal from "./MetafieldValueCellModal/UrlCellModal";
 import VariantCell from "./MetafieldValueCellModal/VariantCell";
 import VolumeCell from "./MetafieldValueCellModal/VolumeCell";
@@ -295,6 +298,42 @@ function MetafieldRow({
               onSetValue={handleValue}
               value={value}
               error={error?.message || false}
+            />
+          ),
+        };
+        case "integer":
+        return {
+          title: "Interger (Old)",
+          icon: HashtagMajor,
+          render: (
+            <IntegerCell
+            onSetValue={handleValue}
+            value={value}
+            error={error?.message || false}
+            />
+          ),
+        };
+        case "string":
+        return {
+          title: "String (Old)",
+          icon: TypeMajor,
+          render: (
+            <StringCell
+            onSetValue={(newValue) => handleValue(newValue)}
+            value={value}
+            error={error?.message || false}
+            />
+          ),
+        };
+        case "json_string":
+        return {
+          title: "JSON String (Old)",
+          icon: CodeMajor,
+          render: (
+            <JsonStringCell
+            onSetValue={handleValue}
+            value={value}
+            error={error?.message || false}
             />
           ),
         };
